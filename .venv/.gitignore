@@ -1,16 +1,19 @@
-/alembic/env.py
-/venv
-/env
+venv/
 
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
+.env
+
+database.db
+
 alembic/__pycache__/
 
 .python-version
 
+ 
 .vscode/
 .idea/
 .DS_Store
