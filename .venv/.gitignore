@@ -1,0 +1,16 @@
+/alembic/env.py
+/venv
+/env
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+alembic/__pycache__/
+
+.python-version
+
+.vscode/
+.idea/
+.DS_Store
