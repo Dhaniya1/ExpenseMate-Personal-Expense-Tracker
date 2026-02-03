@@ -15,3 +15,16 @@ class ExpenseResponse(ExpenseCreate):
 
     class Config:
         orm_mode = True
+
+
+class AccountCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+class AccountResponse(AccountCreate):
+    id: int
+
+    class Config:
+        orm_mode = True

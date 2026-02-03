@@ -10,3 +10,12 @@ class Expense(Base):
     category = Column(String, nullable=False)
     date = Column(Date, nullable=False)
     comment = Column(String, nullable=True)
+
+
+class AccountDetails(Base):
+    __tablename__ = "account"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String)
+    email = Column(String, unique_id=True)
+    password = Column(String)
