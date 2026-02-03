@@ -1,1 +1,22 @@
+<<<<<<< HEAD
 *
+=======
+venv/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.env
+
+database.db
+
+alembic/__pycache__/
+
+.python-version
+
+.vscode/
+.idea/
+.DS_Store
+>>>>>>> 09fe7dd (connected the backend to a online postgresql database. to connect to the database, create a environment variable containing PASSWORD =  and install dotenv package. if you wish to check the code, run uvicorn main:app --reload and go to the local server the backend is running on (port no. is 8000 by default) in the URL add /docs to enter fastapi swagger to test the code)

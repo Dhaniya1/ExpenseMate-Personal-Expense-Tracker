@@ -30,3 +30,11 @@ def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
     db.refresh(db_expense)
 
     return db_expense
+
+
+@app.delete(
+    "/{expense_id}",
+)
+async def delete_expense(id):
+    del Expense[id]
+    return f"Expense record deleted."
