@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date
 from typing import Optional
 
@@ -17,14 +17,18 @@ class ExpenseResponse(ExpenseCreate):
         orm_mode = True
 
 
-class AccountCreate(BaseModel):
+class CreateUserRequest(BaseModel):
     username: str
-    email: str
     password: str
 
 
-class AccountResponse(AccountCreate):
+class AccountResponse(CreateUserRequest):
     id: int
 
     class Config:
         orm_mode = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

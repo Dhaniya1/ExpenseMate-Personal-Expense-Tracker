@@ -12,10 +12,9 @@ class Expense(Base):
     comment = Column(String, nullable=True)
 
 
-class AccountDetails(Base):
+class Users(Base):
     __tablename__ = "account"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String)
-    email = Column(String, unique_id=True)
-    password = Column(String)
+    username = Column(String, unique=True)
+    hashed_password = Column(String)
