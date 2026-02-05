@@ -1,5 +1,16 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from database import Base
+from sqlalchemy.orm import relationship
+
+
+class Users(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True)
+    hashed_password = Column(String)
+
+    expense = relationship("expense", back_populates="owner")
 
 
 class Expense(Base):
@@ -11,10 +22,5 @@ class Expense(Base):
     date = Column(Date, nullable=False)
     comment = Column(String, nullable=True)
 
-
-class Users(Base):
-    __tablename__ = "account"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True)
-    hashed_password = Column(String)
+    owner_id = Column(Integer, ForeignKey("user.id"))
+    owner = relationship("user", back_populates="owner")
