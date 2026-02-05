@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
-from database import Base
 from sqlalchemy.orm import relationship
+from database import Base
 
 
 class Users(Base):
@@ -10,11 +10,11 @@ class Users(Base):
     username = Column(String, unique=True)
     hashed_password = Column(String)
 
-    expense = relationship("expense", back_populates="owner")
+    expenses = relationship("Expense", back_populates="owner")
 
 
 class Expense(Base):
-    __tablename__ = "expense"
+    __tablename__ = "expenses"
 
     id = Column(Integer, primary_key=True, index=True)
     amount = Column(Integer, nullable=False)
@@ -22,5 +22,5 @@ class Expense(Base):
     date = Column(Date, nullable=False)
     comment = Column(String, nullable=True)
 
-    owner_id = Column(Integer, ForeignKey("user.id"))
-    owner = relationship("user", back_populates="owner")
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("Users", back_populates="expenses")

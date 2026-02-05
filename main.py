@@ -7,20 +7,17 @@ from schemas import *
 from starlette import status
 import models
 from auth import *
+from dependencies import get_db
 
 app = FastAPI()
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 @app.post("/expense/", response_model=ExpenseResponse, status_code=200)
-def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
+def create_expense(
+    expense: ExpenseCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     db_expense = Expense(
         amount=expense.amount,
         category=expense.category,
@@ -36,14 +33,21 @@ def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/expense/{expense_id}")
-def expense_read(expense_id: int, db: Session = Depends(get_db)):
+def expense_read(
+    expense_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     expense_view = db.query(Expense).filter(Expense.id == expense_id).first()
     return expense_view
 
 
 @app.put("/expense/{expense_id}", response_model=ExpenseResponse)
 def expense_update(
-    expense_id: int, expense_update: ExpenseCreate, db: Session = Depends(get_db)
+    expense_id: int,
+    expense_update: ExpenseCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
 ):
     expense_id_update = db.query(Expense).filter(Expense.id == expense_id).first()
 
@@ -60,7 +64,11 @@ def expense_update(
 
 
 @app.delete("/expense/{expense_id}", status_code=204)
-def expense_dalete(expense_id: int, db: Session = Depends(get_db)):
+def expense_dalete(
+    expense_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
     expense_record_delete = db.query(Expense).filter(Expense.id == expense_id).first()
 
     if not expense_record_delete:
