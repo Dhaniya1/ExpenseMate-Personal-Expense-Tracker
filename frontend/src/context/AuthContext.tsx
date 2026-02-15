@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import API from "../api/axios";
 
@@ -17,9 +17,15 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  );
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true); // ⭐ new
+
+  // ⭐ Restore token on app start
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+    setLoading(false);
+  }, []);
 
   const login = async (username: string, password: string) => {
     const formData = new URLSearchParams();
@@ -46,13 +52,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
   };
 
-  const value: AuthContextType = {
-    token,
-    login,
-    register,
-    logout,
-    isAuthenticated: !!token,
-  };
+  // ⭐ Wait until we check localStorage before rendering routes
+  if (loading) return null;
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        token,
+        login,
+        register,
+        logout,
+        isAuthenticated: !!token,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };

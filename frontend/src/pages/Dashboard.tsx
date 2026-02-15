@@ -19,8 +19,9 @@ const Dashboard = () => {
   const [comment, setComment] = useState("");
 
   const fetchExpenses = async () => {
-    const res = await API.get("/expenses");
-    setExpenses(res.data);
+    const res = await API.get("/expenses/");
+    console.log("expenses from API:", res.data); 
+    setExpenses(res.data.data ?? res.data);
   };
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const Dashboard = () => {
   const addExpense = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await API.post("/expenses", {
+    await API.post("/expenses/", {
       amount: Number(amount),
       category,
       date,

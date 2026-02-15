@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 
-@app.post("/expense/", response_model=ExpenseResponse, status_code=200)
+@app.post("/expenses/", response_model=ExpenseResponse)
 def create_expense(
     expense: ExpenseCreate,
     db: Session = Depends(get_db),
@@ -35,26 +35,26 @@ def create_expense(
         category=expense.category,
         date=expense.date,
         comment=expense.comment,
+        owner_id=current_user["id"],
     )
 
     db.add(db_expense)
     db.commit()
     db.refresh(db_expense)
-
     return db_expense
 
 
-@app.get("/expense/{expense_id}")
-def expense_read(
-    expense_id: int,
+@app.get("/expenses/", response_model=list[ExpenseResponse])
+def get_all_expenses(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    expense_view = db.query(Expense).filter(Expense.id == expense_id).first()
-    return expense_view
+    expenses = db.query(Expense).filter(Expense.owner_id == current_user["id"]).all()
+
+    return expenses
 
 
-@app.put("/expense/{expense_id}", response_model=ExpenseResponse)
+@app.put("/expenses/{expense_id}", response_model=ExpenseResponse)
 def expense_update(
     expense_id: int,
     expense_update: ExpenseCreate,
@@ -75,7 +75,7 @@ def expense_update(
     return expense_id_update
 
 
-@app.delete("/expense/{expense_id}", status_code=204)
+@app.delete("/expenses/{expense_id}", status_code=204)
 def expense_dalete(
     expense_id: int,
     db: Session = Depends(get_db),

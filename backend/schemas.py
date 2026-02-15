@@ -10,8 +10,13 @@ class ExpenseCreate(BaseModel):
     comment: Optional[str] = None
 
 
-class ExpenseResponse(ExpenseCreate):
+class ExpenseResponse(BaseModel):
     id: int
+    amount: int
+    category: str
+    date: date
+    comment: Optional[str] = None
+    owner_id: int
 
     class Config:
         orm_mode = True
