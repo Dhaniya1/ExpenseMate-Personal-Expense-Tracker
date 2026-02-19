@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends, HTTPException
 from typing import Annotated
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from database import SessionLocal, engine
 from models import Expense
 from schemas import *
@@ -47,11 +48,16 @@ def create_expense(
 @app.get("/expenses/", response_model=list[ExpenseResponse])
 def get_all_expenses(
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user), 
 ):
-    expenses = db.query(Expense).filter(Expense.owner_id == current_user["id"]).all()
+     expenses = (
+        db.query(Expense)
+        .filter(Expense.owner_id == current_user["id"])
+        .order_by(desc(Expense.id)) 
+        .all()
+    )
 
-    return expenses
+     return expenses
 
 
 @app.put("/expenses/{expense_id}", response_model=ExpenseResponse)

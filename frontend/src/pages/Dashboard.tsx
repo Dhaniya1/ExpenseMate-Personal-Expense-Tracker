@@ -6,6 +6,16 @@ import "../index.css";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import Lottie from "lottie-react";
 import financeAnimation from "../assets/Revenue.json";
+import analyticsAnimation from "../assets/Charts.json";
+
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 type Expense = {
   id: number;
@@ -34,6 +44,7 @@ const Dashboard = () => {
   const [date, setDate] = useState(getTodayDate());
   const [comment, setComment] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState("today");
 
   const categories = [
     "Food",
@@ -120,6 +131,39 @@ const Dashboard = () => {
     month: "long",
   });
 
+  const getCategoryData = () => {
+    const categoryTotals: { [key: string]: number } = {};
+
+    expenses.forEach((e) => {
+      if (!categoryTotals[e.category]) {
+        categoryTotals[e.category] = 0;
+      }
+      categoryTotals[e.category] += e.amount;
+    });
+
+    return Object.keys(categoryTotals).map((category) => ({
+      name: category,
+      value: categoryTotals[category],
+    }));
+  };
+
+  const categoryData = getCategoryData();
+
+  const COLORS = [
+    "#F04770", // pink
+    "#F78C6A", // orange
+    "#FFD167", // yellow
+    "#06D7A0", // green
+    "#108AB1", // teal
+    "#073A4B", // dark blue
+  ];
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const todayExpenses = expenses.filter((e) => e.date === today);
+
+  const displayedExpenses =
+    viewMode === "today" ? expenses.filter((e) => e.date === today) : expenses;
   return (
     <>
       <Navbar></Navbar>
@@ -205,6 +249,11 @@ const Dashboard = () => {
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h2 className="text-xl font-semibold mb-4">Your Expenses</h2>
 
+          <div className="flex gap-4 mb-4">
+            <button onClick={() => setViewMode("today")}>Today</button>
+            <button onClick={() => setViewMode("all")}>All Time</button>
+          </div>
+
           {expenses.length === 0 && (
             <div className="flex flex-col items-center justify-center">
               <Lottie
@@ -219,7 +268,7 @@ const Dashboard = () => {
             </div>
           )}
           <ul className="space-y-3">
-            {expenses.map((e) => (
+            {displayedExpenses.map((e) => (
               <li
                 key={e.id}
                 className="flex justify-between items-center p-3 border rounded-lg"
@@ -274,6 +323,50 @@ const Dashboard = () => {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md mt-6">
+          <h2 className="text-lg font-semibold mb-4">Spending by Category</h2>
+
+          {categoryData.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-6">
+              <Lottie
+                animationData={analyticsAnimation}
+                loop
+                className="w-96 h-96"
+              />
+              <p className="text-gray-500 mt-4">No category data yet 📊</p>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={categoryData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  innerRadius={50}
+                  label
+                >
+                  {categoryData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+
+                <Tooltip
+                  formatter={(value) =>
+                    `₹${Number(value).toLocaleString("en-IN")}`
+                  }
+                />
+
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
     </>
