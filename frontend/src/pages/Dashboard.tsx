@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-import Header from "../components/Navbar";
+import Navbar from "../components/Navbar";
+import "../index.css";
 
 type Expense = {
   id: number;
@@ -74,23 +75,12 @@ const Dashboard = () => {
   return (
     <>
 
-    <Header></Header>
+    <Navbar></Navbar>
 
 
     
     <div className="space-y-6 max-w-3xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Expense Tracker</h1>
-        <button
-          onClick={logout}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-        >
-          Logout
-        </button>
-      </div>
 
-      {/* Form */}
       <div className="bg-white p-6 rounded-xl shadow">
         <h2 className="text-xl font-semibold mb-4">
           {editingId ? "Edit Expense" : "Add Expense"}
@@ -133,6 +123,8 @@ const Dashboard = () => {
             {editingId ? "Update Expense" : "Add Expense"}
           </button>
 
+          
+
           {editingId && (
             <button
               type="button"
@@ -145,7 +137,6 @@ const Dashboard = () => {
         </form>
       </div>
 
-      {/* Expense List */}
       <div className="bg-white p-6 rounded-xl shadow">
         <h2 className="text-xl font-semibold mb-4">Your Expenses</h2>
 
