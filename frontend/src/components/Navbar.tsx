@@ -10,33 +10,25 @@ export default function Navbar() {
     <header className="bg-gray-800 text-slate-100 shadow-md">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {/* Logo */}
         <img src={logo} alt="ExpenseMate" className="h-10 w-auto object-contain"/>
 
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-8 text-sm">
+        <div className="flex items-center gap-8">
+        <nav className="hidden md:flex gap-8 text-sm ">
           <a href="#" className="hover:text-teal-200 transition">
             Dashboard
           </a>
-          <a href="#" className="hover:text-blue-400 transition">
-            Reports
-          </a>
-          <a href="#" className="hover:text-blue-400 transition">
+          <a href="#" className="hover:text-teal-200 transition">
             Settings
           </a>
         </nav>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-4">
+        
           <button 
           onClick={logout}
-          className="bg-purple-600 px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          className="bg-purple-600 px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
             Logout
           </button>
           
-
-          {/* Mobile menu button */}
           <button className="md:hidden">
             <svg
               className="w-6 h-6"
