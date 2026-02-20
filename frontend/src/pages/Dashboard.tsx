@@ -231,7 +231,7 @@ const Dashboard = () => {
               onChange={(e) => setComment(e.target.value)}
             />
 
-            <button className="col-span-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
+            <button className="col-span-2 bg-purple-700 text-white py-2 rounded-lg hover:bg-purple-800">
               {editingId ? "Update Expense" : "Add Expense"}
             </button>
 
