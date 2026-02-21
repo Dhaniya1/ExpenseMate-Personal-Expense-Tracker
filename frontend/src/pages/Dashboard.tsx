@@ -334,7 +334,7 @@ const Dashboard = () => {
                 loop
                 className="w-96 h-96"
               />
-              <p className="text-gray-500 mt-4">No category data yet 📊</p>
+              <p className="text-gray-500 mt-4">No category data yet</p>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
