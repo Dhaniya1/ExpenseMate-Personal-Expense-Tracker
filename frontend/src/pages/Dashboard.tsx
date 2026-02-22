@@ -45,6 +45,9 @@ const Dashboard = () => {
   const [comment, setComment] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState("today");
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   const categories = [
     "Food",
@@ -134,19 +137,27 @@ const Dashboard = () => {
   const getCategoryData = () => {
     const categoryTotals: { [key: string]: number } = {};
 
-    expenses.forEach((e) => {
-      if (!categoryTotals[e.category]) {
-        categoryTotals[e.category] = 0;
-      }
-      categoryTotals[e.category] += e.amount;
-    });
+    expenses
+      .filter((e) => {
+        const expenseDate = new Date(e.date);
+        const selected = new Date(selectedDate);
+        return (
+          expenseDate.getMonth() === selected.getMonth() &&
+          expenseDate.getFullYear() === selected.getFullYear()
+        );
+      })
+      .forEach((e) => {
+        if (!categoryTotals[e.category]) {
+          categoryTotals[e.category] = 0;
+        }
+        categoryTotals[e.category] += e.amount;
+      });
 
     return Object.keys(categoryTotals).map((category) => ({
       name: category,
       value: categoryTotals[category],
     }));
   };
-
   const categoryData = getCategoryData();
 
   const COLORS = [
@@ -158,12 +169,21 @@ const Dashboard = () => {
     "#073A4B", // dark blue
   ];
 
-  const today = new Date().toISOString().split("T")[0];
+  const changeDate = (days: number) => {
+    const current = new Date(selectedDate);
+    current.setDate(current.getDate() + days);
+    setSelectedDate(current.toISOString().split("T")[0]);
+  };
 
-  const todayExpenses = expenses.filter((e) => e.date === today);
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+    });
+  };
 
-  const displayedExpenses =
-    viewMode === "today" ? expenses.filter((e) => e.date === today) : expenses;
+  const filteredExpenses = expenses.filter((e) => e.date === selectedDate);
+
   return (
     <>
       <Navbar></Navbar>
@@ -249,9 +269,25 @@ const Dashboard = () => {
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h2 className="text-xl font-semibold mb-4">Your Expenses</h2>
 
-          <div className="flex gap-4 mb-4">
-            <button onClick={() => setViewMode("today")}>Today</button>
-            <button onClick={() => setViewMode("all")}>All Time</button>
+          <div className="flex items-center justify-center gap-6 mb-6">
+            <button
+              onClick={() => changeDate(-1)}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+            >
+              ←
+            </button>
+
+            <div className="text-lg font-medium text-gray-700">
+              {formatDate(selectedDate)}
+            </div>
+
+            <button
+              onClick={() => changeDate(1)}
+              disabled={selectedDate === new Date().toISOString().split("T")[0]}
+              className="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-40"
+            >
+              →
+            </button>
           </div>
 
           {expenses.length === 0 && (
@@ -268,13 +304,13 @@ const Dashboard = () => {
             </div>
           )}
           <ul className="space-y-3">
-            {displayedExpenses.map((e) => (
+            {filteredExpenses.map((e) => (
               <li
                 key={e.id}
                 className="flex justify-between items-center p-3 border rounded-lg"
               >
                 <div>
-                  <div className="flex items-start gap-3 display:inline">
+                  <div className="flex items-start gap-3">
                     <p className="font-semibold text-lg">
                       ₹{e.amount.toLocaleString("en-IN")}
                     </p>
