@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/inter": "^5.2.8",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.13.5",
