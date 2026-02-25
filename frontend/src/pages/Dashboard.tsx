@@ -36,7 +36,7 @@ const Dashboard = () => {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
-  const { logout } = useAuth();
+  const {} = useAuth();
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [amount, setAmount] = useState("");
@@ -44,9 +44,9 @@ const Dashboard = () => {
   const [date, setDate] = useState(getTodayDate());
   const [comment, setComment] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [viewMode, setViewMode] = useState("today");
+  const [] = useState("today");
   const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
 
   const categories = [
