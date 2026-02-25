@@ -385,7 +385,7 @@ const Dashboard = () => {
                   innerRadius={50}
                   label
                 >
-                  {categoryData.map((entry, index) => (
+                  {categoryData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
