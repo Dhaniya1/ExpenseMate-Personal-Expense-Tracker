@@ -17,7 +17,7 @@ engine = create_engine(
         "sslmode": "require",
         "prepare_threshold": 0
     }
-))
+)
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
