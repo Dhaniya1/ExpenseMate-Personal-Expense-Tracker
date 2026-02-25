@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Annotated
-
+from sqlalchemy.exc import IntegrityError
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
@@ -33,9 +33,13 @@ async def create_user(db: db_dependency, create_user_request: CreateUserRequest)
         hashed_password=bcrypt_context.hash(create_user_request.password),
     )
 
-    db.add(create_user_model)
-    db.commit()
-    db.refresh(create_user_model)
+    try:
+        db.add(create_user_model)
+        db.commit()
+        db.refresh(create_user_model)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail = "Username already exists")
 
     return {"message": "User created successfully"}
 
