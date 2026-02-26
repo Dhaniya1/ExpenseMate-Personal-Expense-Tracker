@@ -11,7 +11,7 @@ DATABASE_URL = f"postgresql://postgres.igozekdqvmbjbauputsu:{server_password}@aw
 
 
 engine = create_engine(
-    DATABASE_URL,
+    DATABASE_URL, echo=True
 )
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
