@@ -25,7 +25,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 p-6">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 animate-fadeIn">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold text-gray-800">Welcome Back</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">Welcome</h1>
           <p className="text-gray-500 mt-2 text-sm">
             Login to your ExpenseMate account
           </p>

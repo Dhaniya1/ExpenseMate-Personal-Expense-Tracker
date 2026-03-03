@@ -10,17 +10,21 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
 
-    try {
-      await register(username, password);
-      setMessage("User created! You can now login.");
-      setTimeout(() => navigate("/login"), 1500);
-    } catch {
-      setMessage("Error creating user");
-    }
-  };
+const handleRegister = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    setMessage(
+      "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
+    );
+
+
+  return;
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 p-6">
