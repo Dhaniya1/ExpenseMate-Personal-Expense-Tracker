@@ -6,25 +6,44 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-const handleRegister = async (e: React.FormEvent) => {
-  e.preventDefault();
+    if (!username.trim()) {
+      setMessage("Username cannot be empty");
+      return;
+    }
 
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-  if (!passwordRegex.test(password)) {
-    setMessage(
-      "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
-    );
+    if (!passwordRegex.test(password)) {
+      setMessage(
+        "Password must be at least 8 characters and include uppercase, lowercase, number and special character.",
+      );
+      return;
+    }
 
+    try {
+      await register(username.trim(), password);
+      setMessage("User created! You can now login.");
 
-  return;
-}
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const err = error as any;
+        setMessage(err.response?.data?.detail || "Error creating user");
+      } else {
+        setMessage("Error creating user");
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 p-6">
@@ -52,6 +71,7 @@ const handleRegister = async (e: React.FormEvent) => {
               required
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
               Password
